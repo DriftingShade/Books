@@ -27,3 +27,11 @@ class Author:
         query = "INSERT INTO authors (name, created_at, updated_at) VALUES (%(name)s, NOW(), NOW());"
 
         return connectToMySQL(cls.DB).query_db(query, data)
+    
+    @classmethod
+    def find_author_by_id(cls, data):
+
+        query = "SELECT * FROM authors WHERE id = %(id)s;"
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        print(results)
+        return results[0]
