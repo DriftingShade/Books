@@ -1,5 +1,4 @@
 from flask_app.config.mysqlconnection import connectToMySQL
-from flask import flash
 
 
 class Author:
@@ -27,7 +26,7 @@ class Author:
         query = "INSERT INTO authors (name, created_at, updated_at) VALUES (%(name)s, NOW(), NOW());"
 
         return connectToMySQL(cls.DB).query_db(query, data)
-    
+
     @classmethod
     def find_author_by_id(cls, data):
 

@@ -9,14 +9,16 @@ def books():
     books = Book.get_all_books()
     return render_template("books.html", books=books)
 
+
 @app.post("/books/new_book")
 def new_book():
     Book.create_book(request.form)
     return redirect("/books")
 
+
 @app.post("/books/add_favorite")
 def fave_book():
-    author_id = request.form["author_id"]
-    book_id = request.form["book_id"]
-    Book.add_fave_book(book_id, author_id)
+    data = {"author_id": request.form["id"], "book_id": request.form["book_id"]}
+    author_id = request.form["id"]
+    Book.add_fave_book(data)
     return redirect(f"/authors/{author_id}")

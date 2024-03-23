@@ -1,6 +1,4 @@
 from flask_app.config.mysqlconnection import connectToMySQL
-from flask_app.models.favorite import Favorite
-from flask import flash
 
 
 class Book:
@@ -29,7 +27,7 @@ class Book:
         query = "INSERT INTO books (title, num_of_pages, created_at, updated_at) VALUES (%(title)s, %(num_of_pages)s, NOW(), NOW());"
 
         return connectToMySQL(cls.DB).query_db(query, data)
-    
+
     @classmethod
     def author_favorites(cls, data):
         query = """SELECT * FROM books
@@ -43,11 +41,23 @@ class Book:
         for book in results:
             books.append(cls(book))
         return books
-    
+
     @classmethod
     def add_fave_book(cls, data):
         query = """INSERT INTO favorites (book_id, author_id) VALUES 
         (%(book_id)s, %(author_id)s)"""
-        results = connectToMySQL(Favorite.DB).query_db(query, data)
+        results = connectToMySQL(cls.DB).query_db(query, data)
         print(results)
         return results
+
+    @classmethod
+    def not_favorite_books(cls, data):
+        query = """SELECT *FROM books
+        LEFT JOIN favorites ON books.id = favorites.book_id
+        WHERE favorites.author_id != %(id)s"""
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        print(results)
+        books = []
+        for book in results:
+            books.append(cls(book))
+        return books
