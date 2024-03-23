@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Author Favorites</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container w-75 d-flex justify-content-between mt-5 mx-auto">
+      <main>
+        <h2 class="my-3">{{book.title}}'s Favorites</h2>
+        <table class="table text-center">
+          <thead>
+            <tr>
+              <th scope="col" class="text-center">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for author in fave_authors %}
+            <tr>
+              <td>{{ author.name}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </main>
+      <aside>
+        <h2 class="my-3">Add {{ book.title }}'s Favorites!</h2>
+        <form action="/authors/add_favorite" method="post">
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            name="author_id"
+          >
+            <option selected>Choose An Author To Favorite!</option>
+            {% for author in not_faves %}
+            <option value="{{ author.id }}">{{ author.name }}</option>
+            {% endfor %}
+          </select>
+          <input type="hidden" name="id" value="{{book.id}}" />
+          <input
+            type="submit"
+            class="btn btn-primary mt-5"
+            value="Add Author To Favorites"
+          />
+        </form>
+      </aside>
+    </div>
+    <div class="container d-flex justify-content-center">
+      <a href="/" class="btn btn-primary">Home</a>
+    </div>
+  </body>
+</html>

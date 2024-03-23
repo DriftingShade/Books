@@ -21,18 +21,24 @@ def new_author():
     return redirect("/authors")
 
 
+@app.post("/authors/add_favorite")
+def fave_author():
+    data = {"book_id": request.form["id"], "author_id": request.form["author_id"]}
+    book_id = request.form["id"]
+    Author.add_fave_author(data)
+    return redirect(f"/books/{book_id}")
+
+
 @app.get("/authors/<int:author_id>")
 def author_info(author_id):
     author = Author.find_author_by_id({"id": author_id})
     if author == None:
         return "Could Not Find Author!"
     fave_books = Book.author_favorites({"id": author_id})
-    book_list = Book.get_all_books()
     not_faves = Book.not_favorite_books({"id": author_id})
     return render_template(
         "author_show.html",
         author=author,
-        book_list=book_list,
         not_faves=not_faves,
         fave_books=fave_books,
     )

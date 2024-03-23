@@ -12,6 +12,14 @@ class Book:
         self.updated_at = data["updated_at"]
 
     @classmethod
+    def find_book_by_id(cls, data):
+
+        query = "SELECT * FROM books WHERE id = %(id)s;"
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        print(results)
+        return results[0]
+
+    @classmethod
     def get_all_books(cls):
         query = "SELECT * FROM books;"
         print(query)
@@ -52,9 +60,12 @@ class Book:
 
     @classmethod
     def not_favorite_books(cls, data):
-        query = """SELECT *FROM books
-        LEFT JOIN favorites ON books.id = favorites.book_id
-        WHERE favorites.author_id != %(id)s"""
+        query = """SELECT *
+            FROM books
+            LEFT JOIN favorites
+            ON books.id = favorites.book_id
+            AND favorites.author_id = %(id)s
+            WHERE favorites.book_id IS NULL;"""
         results = connectToMySQL(cls.DB).query_db(query, data)
         print(results)
         books = []

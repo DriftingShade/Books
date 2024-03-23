@@ -34,3 +34,36 @@ class Author:
         results = connectToMySQL(cls.DB).query_db(query, data)
         print(results)
         return results[0]
+
+    @classmethod
+    def fave_books(cls, data):
+        query = """SELECT * FROM authors
+                JOIN favorites ON authors.id = favorites.author_id
+                JOIN books ON favorites.book_id = books.id
+                WHERE books.id = %(id)s; """
+        print(query)
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        print(results)
+        authors = []
+        for author in results:
+            authors.append(cls(author))
+        return authors
+
+    @classmethod
+    def not_favorite_authors(cls, data):
+        query = """SELECT * FROM authors WHERE authors.id 
+        NOT IN (SELECT author_id FROM favorites WHERE book_id = %(id)s);"""
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        print(results)
+        authors = []
+        for author in results:
+            authors.append(cls(author))
+        return authors
+
+    @classmethod
+    def add_fave_author(cls, data):
+        query = """INSERT INTO favorites (book_id, author_id) VALUES 
+        (%(book_id)s, %(author_id)s)"""
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        print(results)
+        return results
